@@ -1,0 +1,447 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		DBF9C3A82AB53E4A00D2C144 /* Score-Keeper Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = DBF9C3A72AB53E4A00D2C144 /* Score-Keeper Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		DBF9C3AD2AB53E4A00D2C144 /* Score_KeeperApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBF9C3AC2AB53E4A00D2C144 /* Score_KeeperApp.swift */; };
+		DBF9C3AF2AB53E4A00D2C144 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBF9C3AE2AB53E4A00D2C144 /* ContentView.swift */; };
+		DBF9C3B12AB53E5600D2C144 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DBF9C3B02AB53E5600D2C144 /* Assets.xcassets */; };
+		DBF9C3B42AB53E5600D2C144 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DBF9C3B32AB53E5600D2C144 /* Preview Assets.xcassets */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		DBF9C3A92AB53E4A00D2C144 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DBF9C39B2AB53E4900D2C144 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DBF9C3A62AB53E4A00D2C144;
+			remoteInfo = "Score-Keeper Watch App";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		DBF9C3BA2AB53E5600D2C144 /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				DBF9C3A82AB53E4A00D2C144 /* Score-Keeper Watch App.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		DBF9C3A12AB53E4A00D2C144 /* Score-Keeper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Score-Keeper.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		DBF9C3A72AB53E4A00D2C144 /* Score-Keeper Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Score-Keeper Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		DBF9C3AC2AB53E4A00D2C144 /* Score_KeeperApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Score_KeeperApp.swift; sourceTree = "<group>"; };
+		DBF9C3AE2AB53E4A00D2C144 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		DBF9C3B02AB53E5600D2C144 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		DBF9C3B32AB53E5600D2C144 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		DBF9C3A42AB53E4A00D2C144 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		DBF9C39A2AB53E4900D2C144 = {
+			isa = PBXGroup;
+			children = (
+				DBF9C3AB2AB53E4A00D2C144 /* Score-Keeper Watch App */,
+				DBF9C3A22AB53E4A00D2C144 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		DBF9C3A22AB53E4A00D2C144 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				DBF9C3A12AB53E4A00D2C144 /* Score-Keeper.app */,
+				DBF9C3A72AB53E4A00D2C144 /* Score-Keeper Watch App.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		DBF9C3AB2AB53E4A00D2C144 /* Score-Keeper Watch App */ = {
+			isa = PBXGroup;
+			children = (
+				DBF9C3AC2AB53E4A00D2C144 /* Score_KeeperApp.swift */,
+				DBF9C3AE2AB53E4A00D2C144 /* ContentView.swift */,
+				DBF9C3B02AB53E5600D2C144 /* Assets.xcassets */,
+				DBF9C3B22AB53E5600D2C144 /* Preview Content */,
+			);
+			path = "Score-Keeper Watch App";
+			sourceTree = "<group>";
+		};
+		DBF9C3B22AB53E5600D2C144 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				DBF9C3B32AB53E5600D2C144 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		DBF9C3A02AB53E4A00D2C144 /* Score-Keeper */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DBF9C3BB2AB53E5600D2C144 /* Build configuration list for PBXNativeTarget "Score-Keeper" */;
+			buildPhases = (
+				DBF9C39F2AB53E4A00D2C144 /* Resources */,
+				DBF9C3BA2AB53E5600D2C144 /* Embed Watch Content */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DBF9C3AA2AB53E4A00D2C144 /* PBXTargetDependency */,
+			);
+			name = "Score-Keeper";
+			productName = "Score-Keeper";
+			productReference = DBF9C3A12AB53E4A00D2C144 /* Score-Keeper.app */;
+			productType = "com.apple.product-type.application.watchapp2-container";
+		};
+		DBF9C3A62AB53E4A00D2C144 /* Score-Keeper Watch App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DBF9C3B72AB53E5600D2C144 /* Build configuration list for PBXNativeTarget "Score-Keeper Watch App" */;
+			buildPhases = (
+				DBF9C3A32AB53E4A00D2C144 /* Sources */,
+				DBF9C3A42AB53E4A00D2C144 /* Frameworks */,
+				DBF9C3A52AB53E4A00D2C144 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Score-Keeper Watch App";
+			productName = "Score-Keeper Watch App";
+			productReference = DBF9C3A72AB53E4A00D2C144 /* Score-Keeper Watch App.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		DBF9C39B2AB53E4900D2C144 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1430;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					DBF9C3A02AB53E4A00D2C144 = {
+						CreatedOnToolsVersion = 14.3.1;
+					};
+					DBF9C3A62AB53E4A00D2C144 = {
+						CreatedOnToolsVersion = 14.3.1;
+					};
+				};
+			};
+			buildConfigurationList = DBF9C39E2AB53E4900D2C144 /* Build configuration list for PBXProject "Score-Keeper" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = DBF9C39A2AB53E4900D2C144;
+			productRefGroup = DBF9C3A22AB53E4A00D2C144 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				DBF9C3A02AB53E4A00D2C144 /* Score-Keeper */,
+				DBF9C3A62AB53E4A00D2C144 /* Score-Keeper Watch App */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		DBF9C39F2AB53E4A00D2C144 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DBF9C3A52AB53E4A00D2C144 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DBF9C3B42AB53E5600D2C144 /* Preview Assets.xcassets in Resources */,
+				DBF9C3B12AB53E5600D2C144 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		DBF9C3A32AB53E4A00D2C144 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DBF9C3AF2AB53E4A00D2C144 /* ContentView.swift in Sources */,
+				DBF9C3AD2AB53E4A00D2C144 /* Score_KeeperApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		DBF9C3AA2AB53E4A00D2C144 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DBF9C3A62AB53E4A00D2C144 /* Score-Keeper Watch App */;
+			targetProxy = DBF9C3A92AB53E4A00D2C144 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		DBF9C3B52AB53E5600D2C144 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		DBF9C3B62AB53E5600D2C144 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+		DBF9C3B82AB53E5600D2C144 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Score-Keeper Watch App/Preview Content\"";
+				DEVELOPMENT_TEAM = A6QFRGXX8S;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Score-Keeper";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKWatchOnly = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "tech.scotth.Score-Keeper.watchkitapp";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 9.4;
+			};
+			name = Debug;
+		};
+		DBF9C3B92AB53E5600D2C144 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Score-Keeper Watch App/Preview Content\"";
+				DEVELOPMENT_TEAM = A6QFRGXX8S;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Score-Keeper";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKWatchOnly = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "tech.scotth.Score-Keeper.watchkitapp";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 9.4;
+			};
+			name = Release;
+		};
+		DBF9C3BC2AB53E5600D2C144 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = A6QFRGXX8S;
+				INFOPLIST_KEY_CFBundleDisplayName = "Score-Keeper";
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "tech.scotth.Score-Keeper";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		DBF9C3BD2AB53E5600D2C144 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = A6QFRGXX8S;
+				INFOPLIST_KEY_CFBundleDisplayName = "Score-Keeper";
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "tech.scotth.Score-Keeper";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		DBF9C39E2AB53E4900D2C144 /* Build configuration list for PBXProject "Score-Keeper" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DBF9C3B52AB53E5600D2C144 /* Debug */,
+				DBF9C3B62AB53E5600D2C144 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DBF9C3B72AB53E5600D2C144 /* Build configuration list for PBXNativeTarget "Score-Keeper Watch App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DBF9C3B82AB53E5600D2C144 /* Debug */,
+				DBF9C3B92AB53E5600D2C144 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DBF9C3BB2AB53E5600D2C144 /* Build configuration list for PBXNativeTarget "Score-Keeper" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DBF9C3BC2AB53E5600D2C144 /* Debug */,
+				DBF9C3BD2AB53E5600D2C144 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = DBF9C39B2AB53E4900D2C144 /* Project object */;
+}
