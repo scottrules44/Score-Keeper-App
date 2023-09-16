@@ -1,24 +1,66 @@
-import React, { useState } from 'react';
-import { View, Text, Button, StyleSheet, Alert } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, Alert } from 'react-native';
 import CustomButton from './CustomButton';
+
+import { initializeApp } from 'firebase/app';
+import { getDatabase, ref, onValue, update } from "firebase/database";
+
+// TODO: Replace the following with your app's Firebase project configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyBouW3qRDbDGIGreQj1Gk0-kBWZtLqzCc0",
+  authDomain: "corona-sdk-4-82825584.firebaseapp.com",
+  databaseURL: "https://corona-sdk-4-82825584.firebaseio.com",
+  projectId: "corona-sdk-4-82825584",
+  storageBucket: "corona-sdk-4-82825584.appspot.com",
+  messagingSenderId: "652763858765",
+  appId: "1:652763858765:web:68320c1e0dec341d095904",
+  measurementId: "G-CHT4LV5J43"
+};
+
+const app = initializeApp(firebaseConfig);
+
+const database = getDatabase(app);
+
 const Scoreboard = () => {
   const [player1Score, setPlayer1Score] = useState(0);
   const [player2Score, setPlayer2Score] = useState(0);
-
+  const matchScore = ref(database, 'matchScore');
+  useEffect(() => {
+    onValue(matchScore, (snapshot) => {
+      const data = snapshot.val();
+      setPlayer1Score(data?.player1 ?? 0);
+      setPlayer2Score(data?.player2 ?? 0);
+    });
+  }, []);
+  
   const increaseScore = (player) => {
     if (player === 1) {
       setPlayer1Score(player1Score + 1);
+      update(ref(database, 'matchScore'), {
+        player1: player1Score+1,
+      });
     } else {
       setPlayer2Score(player2Score + 1);
+      update(ref(database, 'matchScore'), {
+        player2: player2Score+1,
+      });
     }
+    
   };
 
   const decreaseScore = (player) => {
     if (player === 1 && player1Score > 0) {
       setPlayer1Score(player1Score - 1);
+      update(ref(database, 'matchScore'), {
+        player1: player1Score - 1,
+      });
     } else if (player === 2 && player2Score > 0) {
       setPlayer2Score(player2Score - 1);
+      update(ref(database, 'matchScore'), {
+        player1: player2Score - 1,
+      });
     }
+    
   };
 
   const resetScores = () => {
@@ -29,6 +71,10 @@ const Scoreboard = () => {
         { text: 'Yes', onPress: () => {
           setPlayer1Score(0);
           setPlayer2Score(0);
+          update(ref(database, 'matchScore'), {
+            player1: 0,
+            player2: 0,
+          });
         } },
         {
           text: 'No',
@@ -92,16 +138,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 20, 
-    marginHorizontal: 30,
+    marginHorizontal: 10,
   },
   score: {
     display: 'flex',
     alignItems: 'center',
-    width: 230,
+    width: 310,
   },
   scoreText: {
     color: 'white',
-    fontSize: 220,
+    fontSize: 270,
     fontWeight: 'bold',
   },
   buttonContainer: {
