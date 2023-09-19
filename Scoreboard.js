@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Alert } from 'react-native';
 import CustomButton from './CustomButton';
-
+import { Audio } from 'expo-av';
 import { initializeApp } from 'firebase/app';
 import { getDatabase, ref, onValue, update } from "firebase/database";
 
@@ -22,18 +22,46 @@ const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
 const Scoreboard = () => {
+  const [sound, setSound] = useState();
+
+  useEffect(() => {
+    return sound
+      ? () => {
+          sound.unloadAsync(); // Unload the sound when the component unmounts
+        }
+      : undefined;
+  }, [sound]);
+
+
+  const playSound = async () => {
+    const { sound } = await Audio.Sound.createAsync(
+      require('./assets/beep.wav')
+    );
+    setSound(sound);
+    console.log('Playing Sound');
+    await sound.playAsync(); // Play the loaded audio
+  };
   const [player1Score, setPlayer1Score] = useState(0);
   const [player2Score, setPlayer2Score] = useState(0);
   const matchScore = ref(database, 'matchScore');
   useEffect(() => {
     onValue(matchScore, (snapshot) => {
       const data = snapshot.val();
-      setPlayer1Score(data?.player1 ?? 0);
-      setPlayer2Score(data?.player2 ?? 0);
+      setPlayer1Score((oldScore)=>{
+        if(oldScore !== data?.player1){
+          playSound();
+        }
+        return data?.player1 ?? 0});
+      setPlayer2Score((oldScore)=>{
+        if(oldScore !== data?.player2){
+          playSound();
+        }
+        return data?.player2 ?? 0});
     });
   }, []);
-  
+
   const increaseScore = (player) => {
+    playSound();
     if (player === 1) {
       setPlayer1Score(player1Score + 1);
       update(ref(database, 'matchScore'), {
@@ -45,10 +73,11 @@ const Scoreboard = () => {
         player2: player2Score+1,
       });
     }
-    
+
   };
 
   const decreaseScore = (player) => {
+    playSound();
     if (player === 1 && player1Score > 0) {
       setPlayer1Score(player1Score - 1);
       update(ref(database, 'matchScore'), {
@@ -57,10 +86,10 @@ const Scoreboard = () => {
     } else if (player === 2 && player2Score > 0) {
       setPlayer2Score(player2Score - 1);
       update(ref(database, 'matchScore'), {
-        player1: player2Score - 1,
+        player2: player2Score - 1,
       });
     }
-    
+
   };
 
   const resetScores = () => {
@@ -129,15 +158,15 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   scoreContainer: {
-    display:'flex', 
-    flexDirection:'row', 
-    gap: 40, 
+    display:'flex',
+    flexDirection:'row',
+    gap: 40,
     alignItems:'center',
   },
   scores: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 20, 
+    marginBottom: 20,
     marginHorizontal: 10,
   },
   score: {
