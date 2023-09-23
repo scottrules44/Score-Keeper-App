@@ -11,6 +11,7 @@ import Foundation
 enum AddOrSub {
     case ADD
     case SUB
+    case RESET
 }
 struct Player:Codable {
     var player1: Double
@@ -27,6 +28,7 @@ struct ContentView: View {
     
     @State private var player1 = 0.0
     @State private var player2 = 0.0
+    @State private var showAlert = false
     func sendPutRequest(playerNum: Double, mode: AddOrSub) {
         guard let url = URL(string: "https://corona-sdk-4-82825584.firebaseio.com/matchScore.json") else {
             return
@@ -62,6 +64,10 @@ struct ContentView: View {
                                 }else if(playerData.player2 > 0){
                                     playerData.player2 -= 1
                                 }
+                            }
+                            if(playerNum == 3){
+                                playerData.player1 = 0
+                                playerData.player2 = 0
                             }
                             player1 = playerData.player1
                             player2 = playerData.player2
@@ -116,12 +122,31 @@ struct ContentView: View {
                }
                .padding()
                Button(action: {
-                   sendPutRequest(playerNum: 1, mode:AddOrSub.SUB)
+                   sendPutRequest(playerNum: 3, mode:AddOrSub.SUB)
                }) {
                    Image(systemName: "minus.circle")
                        .font(.largeTitle)
                }
                .padding()
+
+               
+           }
+           VStack {
+               Button(action: {
+                   showAlert = true
+               }) {
+                   Image(systemName: "arrow.clockwise.circle")
+                       .font(.largeTitle)
+               }.alert(isPresented: $showAlert) {
+                   Alert(
+                       title: Text("Score Reset"),
+                       message: Text("You are about to reset the score!"),
+                       primaryButton: .default(Text("OK")) {
+                           sendPutRequest(playerNum: 3, mode:AddOrSub.RESET)
+                       },
+                       secondaryButton: .cancel()
+                   )
+               }
 
                
            }

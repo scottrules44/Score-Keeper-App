@@ -178,6 +178,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 270,
     fontWeight: 'bold',
+    fontFamily: 'Sign',
   },
   buttonContainer: {
     gap: 20,
