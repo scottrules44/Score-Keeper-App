@@ -4,6 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { useCallback } from 'react';
+import * as NavigationBar from 'expo-navigation-bar';
 
 SplashScreen.preventAutoHideAsync();
 export default function App() {
@@ -12,6 +13,7 @@ export default function App() {
   });
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded || fontError) {
+      await NavigationBar.getVisibilityAsync("hidden");
       await SplashScreen.hideAsync();
     }
   }, [fontsLoaded, fontError]);
