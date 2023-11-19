@@ -119,25 +119,21 @@ const Scoreboard = () => {
       <View style={styles.scores}>
         <View style={styles.scoreContainer}>
           <View style={styles.score}>
+            <CustomButton fontSize={60} text="+" isNormal={false} onPress={() => increaseScore(1)} />
             <Text style={{fontSize: 40, color: '#FF10F0', fontWeight: 'bold'}} >Home:</Text>
             <Text style={[ styles.scoreText, {color: '#FF10F0'} ]}>{player1Score}</Text>
-          </View>
-          <View style={styles.buttonContainer}>
-            <CustomButton fontSize={60} text="+" onPress={() => increaseScore(1)} />
-            <CustomButton fontSize={60} text="-" onPress={() => decreaseScore(1)} />
+            <CustomButton fontSize={60} text="-" isNormal={false} onPress={() => decreaseScore(1)} />
           </View>
         </View>
         <View style={styles.resetButton}>
           <CustomButton text="Reset Scores" fontSize={20} onPress={() => resetScores()} />
         </View>
         <View style={styles.scoreContainer}>
-          <View style={styles.buttonContainer}>
-            <CustomButton fontSize={60} text="+" onPress={() => increaseScore(2)} />
-            <CustomButton fontSize={60} text="-" onPress={() => decreaseScore(2)} />
-          </View>
           <View style={styles.score}>
+            <CustomButton fontSize={60} text="+" isNormal={false} onPress={() => increaseScore(2)} />
             <Text style={{fontSize: 40, color: '#00FFFF', fontWeight: 'bold'}} >Away:</Text>
             <Text style={[styles.scoreText, {color: '#00FFFF'}]}>{player2Score}</Text>
+            <CustomButton fontSize={60} text="-" isNormal={false} onPress={() => decreaseScore(2)} />
           </View>
         </View>
       </View>
@@ -172,12 +168,11 @@ const styles = StyleSheet.create({
   score: {
     display: 'flex',
     alignItems: 'center',
-    width: 310,
+    width: 390,
   },
   scoreText: {
     color: 'white',
-    fontSize: 270,
-    fontWeight: 'bold',
+    fontSize: 370,
     fontFamily: 'Sign',
   },
   buttonContainer: {

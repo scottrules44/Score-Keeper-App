@@ -1,21 +1,20 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 
-const CustomButton = ({ text, bgColor='', fontSize = 80, onPress }) => {
+const CustomButton = ({ text, bgColor='', fontSize = 80, onPress, isNormal =true }) => {
   const buttonStyle = {
     backgroundColor: bgColor,
   };
 
   return (
-    <TouchableOpacity style={[styles.button, buttonStyle]} onPress={onPress}>
-      <Text style={[styles.buttonText, {fontSize}]}>{text}</Text>
+    <TouchableOpacity style={[styles.button, buttonStyle, (!isNormal&&{ width: 300})]} onPress={onPress}>
+      <Text style={[styles.buttonText, {fontSize}, (!isNormal?{ margin: -10} : { padding: 10})]}>{text}</Text>
     </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   button: {
-    padding: 10,
     borderRadius: 5,
     alignItems: 'center',
     borderWidth: 2,
