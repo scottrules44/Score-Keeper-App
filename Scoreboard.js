@@ -38,7 +38,6 @@ const Scoreboard = () => {
       require('./assets/beep.wav')
     );
     setSound(sound);
-    console.log('Playing Sound');
     await sound.playAsync(); // Play the loaded audio
   };
   const [player1Score, setPlayer1Score] = useState(0);
