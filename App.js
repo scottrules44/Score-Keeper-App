@@ -13,7 +13,7 @@ export default function App() {
   });
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded || fontError) {
-      await NavigationBar.getVisibilityAsync("hidden");
+      await NavigationBar.setVisibilityAsync("hidden");
       await SplashScreen.hideAsync();
     }
   }, [fontsLoaded, fontError]);
