@@ -12,6 +12,7 @@ enum AddOrSub {
     case ADD
     case SUB
     case RESET
+    case GETDATA
 }
 struct Player:Codable {
     var player1: Double
@@ -29,6 +30,8 @@ struct ContentView: View {
     @State private var player1 = 0.0
     @State private var player2 = 0.0
     @State private var showAlert = false
+    @State private var offline = UserDefaults.standard.bool(forKey: "offline");
+    
     func sendPutRequest(playerNum: Double, mode: AddOrSub) {
         guard let url = URL(string: "https://corona-sdk-4-82825584.firebaseio.com/matchScore.json") else {
             return
@@ -37,7 +40,27 @@ struct ContentView: View {
         var request2 = URLRequest(url: url)
         request2.httpMethod = "GET"
         
-
+        if(offline){
+            if(playerNum == 1){
+                if(mode == AddOrSub.ADD){
+                    player1 += 1
+                }else if(player1 > 0){
+                    player1 -= 1
+                }
+            }
+            if(playerNum == 2){
+                if(mode == AddOrSub.ADD){
+                    player2 += 1
+                }else if(player2 > 0){
+                    player2 -= 1
+                }
+            }
+            if(playerNum == 3){
+                player1 = 0
+                player2 = 0
+            }
+            return
+        }
         URLSession.shared.dataTask(with: request2) { data, response, error in
             if let error = error {
                 print("Error: \(error.localizedDescription)")
@@ -81,7 +104,6 @@ struct ContentView: View {
                                 return
                             }
                             request.httpMethod = "PUT"
-                            
                             URLSession.shared.dataTask(with: request) { data, response, error in
                             if let error = error {
                                 print("Error: \(error.localizedDescription)")
@@ -97,13 +119,12 @@ struct ContentView: View {
                                     print("Status Code: \(httpResponse.statusCode)")
                                 }
                             }
-                        }.resume()
+                            }.resume()
                         }catch{
                             print("error loading data")
                         }
                     }
                 }
-                
                 
 
             }
@@ -111,65 +132,84 @@ struct ContentView: View {
         
     }
    var body: some View {
-       HStack {
-           VStack {
-               Text("Home \(Int(player1))").foregroundColor(Color(hex:"#FF10F0"))
-               Button(action: {
-                   sendPutRequest(playerNum: 1, mode:AddOrSub.ADD)
-               }) {
-                   Image(systemName: "plus.circle")
-                       .font(.largeTitle)
+       SwiftUI.Group{
+           TabView{
+               HStack {
+                   VStack {
+                       Text("Home \(Int(player1))").foregroundColor(Color(hex:"#FF10F0")).font(.title3)
+                       Button(action: {
+                           sendPutRequest(playerNum: 1, mode:AddOrSub.ADD)
+                       }) {
+                           Image(systemName: "plus.circle")
+                               .font(.largeTitle)
+                       }
+                       .padding()
+                       Button(action: {
+                           sendPutRequest(playerNum: 1, mode:AddOrSub.SUB)
+                       }) {
+                           Image(systemName: "minus.circle")
+                               .font(.largeTitle)
+                       }
+                       .padding()
+                       
+                       
+                   }
+                   VStack {
+                       Button(action: {
+                           showAlert = true
+                       }) {
+                           Image(systemName: "arrow.clockwise.circle")
+                               .font(.title2).padding(0)
+                       }.alert(isPresented: $showAlert) {
+                           Alert(
+                            title: Text("Score Reset"),
+                            message: Text("You are about to reset the score!"),
+                            primaryButton: .default(Text("OK")) {
+                                sendPutRequest(playerNum: 3, mode:AddOrSub.RESET)
+                            },
+                            secondaryButton: .cancel()
+                           )
+                       }.buttonStyle(PlainButtonStyle())
+                       
+                       
+                   }
+                   VStack {
+                       Text("Away \(Int(player2))").foregroundColor(Color(hex:"#00FFFF")).font(.title3)
+                       Button(action: {
+                           sendPutRequest(playerNum: 2, mode:AddOrSub.ADD)
+                       }) {
+                           Image(systemName: "plus.circle")
+                               .font(.largeTitle)
+                       }
+                       .padding()
+                       
+                       Button(action: {
+                           sendPutRequest(playerNum: 2, mode:AddOrSub.SUB)
+                       }) {
+                           Image(systemName: "minus.circle")
+                               .font(.largeTitle)
+                       }
+                       .padding()
+                       
+                   }
                }
-               .padding()
-               Button(action: {
-                   sendPutRequest(playerNum: 1, mode:AddOrSub.SUB)
-               }) {
-                   Image(systemName: "minus.circle")
-                       .font(.largeTitle)
+               VStack {
+                   Toggle(isOn: $offline) {
+                       Text("Enable Offline Mode")
+                   }.onChange(of: offline) { newValue in
+                       UserDefaults.standard.set(offline, forKey: "offline")
+                   }.padding()
+                   Button(action: {
+                       sendPutRequest(playerNum: 4, mode:AddOrSub.GETDATA)
+                   }) {
+                       Text("Get Data")
+                       Image(systemName: "arrow.clockwise.circle")
+                           .font(.title).padding(0)
+                   }.buttonStyle(PlainButtonStyle())
                }
-               .padding()
-
-               
-           }
-           VStack {
-               Button(action: {
-                   showAlert = true
-               }) {
-                   Image(systemName: "arrow.clockwise.circle")
-                       .font(.title2).padding(0)
-               }.alert(isPresented: $showAlert) {
-                   Alert(
-                       title: Text("Score Reset"),
-                       message: Text("You are about to reset the score!"),
-                       primaryButton: .default(Text("OK")) {
-                           sendPutRequest(playerNum: 3, mode:AddOrSub.RESET)
-                       },
-                       secondaryButton: .cancel()
-                   )
-               }.buttonStyle(PlainButtonStyle())
-
-               
-           }
-           VStack {
-               Text("Away \(Int(player2))").foregroundColor(Color(hex:"#00FFFF"))
-               Button(action: {
-                   sendPutRequest(playerNum: 2, mode:AddOrSub.ADD)
-               }) {
-                   Image(systemName: "plus.circle")
-                       .font(.largeTitle)
-               }
-               .padding()
-               
-               Button(action: {
-                   sendPutRequest(playerNum: 2, mode:AddOrSub.SUB)
-               }) {
-                   Image(systemName: "minus.circle")
-                       .font(.largeTitle)
-               }
-               .padding()
-
            }
        }
+      
    }
 }
 
