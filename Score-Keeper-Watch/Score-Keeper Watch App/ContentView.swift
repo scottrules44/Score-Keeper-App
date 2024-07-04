@@ -136,7 +136,7 @@ struct ContentView: View {
            TabView{
                HStack {
                    VStack {
-                       Text("Home \(Int(player1))").foregroundColor(Color(hex:"#FF10F0")).font(.title3)
+                       Text("Home \(Int(player1))").foregroundColor(Color(hex:"#FF10F0")).font(.headline)
                        Button(action: {
                            sendPutRequest(playerNum: 1, mode:AddOrSub.ADD)
                        }) {
@@ -174,7 +174,7 @@ struct ContentView: View {
                        
                    }
                    VStack {
-                       Text("Away \(Int(player2))").foregroundColor(Color(hex:"#00FFFF")).font(.title3)
+                       Text("Away \(Int(player2))").foregroundColor(Color(hex:"#00FFFF")).font(.headline)
                        Button(action: {
                            sendPutRequest(playerNum: 2, mode:AddOrSub.ADD)
                        }) {
