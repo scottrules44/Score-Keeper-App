@@ -7,6 +7,9 @@ import { useCallback } from 'react';
 import * as NavigationBar from 'expo-navigation-bar';
 
 SplashScreen.preventAutoHideAsync();
+await ScreenOrientation.lockAsync(
+  ScreenOrientation.OrientationLock.LANDSCAPE
+);
 export default function App() {
   const [fontsLoaded, fontError] = useFonts({
     'Sign': require('./assets/fonts/sign.ttf'),

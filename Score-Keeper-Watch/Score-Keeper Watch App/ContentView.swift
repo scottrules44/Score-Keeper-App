@@ -30,7 +30,7 @@ struct ContentView: View {
     @State private var player1 = 0.0
     @State private var player2 = 0.0
     @State private var showAlert = false
-    @State private var offline = UserDefaults.standard.bool(forKey: "offline");
+    @State private var offline = true //UserDefaults.standard.bool(forKey: "offline");
     
     func sendPutRequest(playerNum: Double, mode: AddOrSub) {
         guard let url = URL(string: "https://corona-sdk-4-82825584.firebaseio.com/matchScore.json") else {
@@ -193,20 +193,20 @@ struct ContentView: View {
                        
                    }
                }
-               VStack {
-                   Toggle(isOn: $offline) {
-                       Text("Enable Offline Mode")
-                   }.onChange(of: offline) { newValue in
-                       UserDefaults.standard.set(offline, forKey: "offline")
-                   }.padding()
-                   Button(action: {
-                       sendPutRequest(playerNum: 4, mode:AddOrSub.GETDATA)
-                   }) {
-                       Text("Get Data")
-                       Image(systemName: "arrow.clockwise.circle")
-                           .font(.title).padding(0)
-                   }.buttonStyle(PlainButtonStyle())
-               }
+//               VStack {
+//                   Toggle(isOn: $offline) {
+//                       Text("Enable Offline Mode")
+//                   }.onChange(of: offline) { newValue in
+//                       UserDefaults.standard.set(offline, forKey: "offline")
+//                   }.padding()
+//                   Button(action: {
+//                       sendPutRequest(playerNum: 4, mode:AddOrSub.GETDATA)
+//                   }) {
+//                       Text("Get Data")
+//                       Image(systemName: "arrow.clockwise.circle")
+//                           .font(.title).padding(0)
+//                   }.buttonStyle(PlainButtonStyle())
+//               }
            }
        }
       
