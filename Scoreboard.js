@@ -4,7 +4,7 @@ import CustomButton from './CustomButton';
 import { Audio } from 'expo-av';
 import { initializeApp } from 'firebase/app';
 import { getDatabase, ref, onValue, update } from "firebase/database";
-
+import * as Device from 'expo-device';
 // TODO: Replace the following with your app's Firebase project configuration
 const firebaseConfig = {
   apiKey: "AIzaSyBouW3qRDbDGIGreQj1Gk0-kBWZtLqzCc0",
@@ -23,6 +23,7 @@ const database = getDatabase(app);
 
 const Scoreboard = () => {
   const [sound, setSound] = useState();
+  const [soundOn, setSoundOn] = useState(true);
 
   useEffect(() => {
     return sound
@@ -34,6 +35,7 @@ const Scoreboard = () => {
 
 
   const playSound = async () => {
+    if(soundOn) return;
     const { sound } = await Audio.Sound.createAsync(
       require('./assets/beep.wav')
     );
@@ -112,27 +114,27 @@ const Scoreboard = () => {
       ],
     );
   };
-
   return (
     <View style={styles.container}>
       <View style={styles.scores}>
         <View style={styles.scoreContainer}>
           <View style={styles.score}>
-            <CustomButton fontSize={60} text="+" isNormal={false} onPress={() => increaseScore(1)} />
+            <CustomButton fontSize={Device.deviceType === 2 ? 100 : 50} text="+" isNormal={false} onPress={() => increaseScore(1)} />
             <Text style={{fontSize: 40, color: '#FF10F0', fontWeight: 'bold'}} >Home:</Text>
             <Text style={[ styles.scoreText, {color: '#FF10F0'} ]}>{player1Score}</Text>
-            <CustomButton fontSize={60} text="-" isNormal={false} onPress={() => decreaseScore(1)} />
+            <CustomButton fontSize={Device.deviceType === 2 ? 100 : 50} text="-" isNormal={false} onPress={() => decreaseScore(1)} />
           </View>
         </View>
-        <View style={styles.resetButton}>
+        <View style={styles.middleButtons}>
           <CustomButton text="Reset Scores" fontSize={20} onPress={() => resetScores()} />
+          <CustomButton text={soundOn ? "Sound On" : "Sound Off"} fontSize={20} onPress={() => setSoundOn(!soundOn)} />
         </View>
         <View style={styles.scoreContainer}>
           <View style={styles.score}>
-            <CustomButton fontSize={60} text="+" isNormal={false} onPress={() => increaseScore(2)} />
+            <CustomButton fontSize={Device.deviceType === 2 ? 100 : 50} text="+" isNormal={false} onPress={() => increaseScore(2)} />
             <Text style={{fontSize: 40, color: '#00FFFF', fontWeight: 'bold'}} >Away:</Text>
             <Text style={[styles.scoreText, {color: '#00FFFF'}]}>{player2Score}</Text>
-            <CustomButton fontSize={60} text="-" isNormal={false} onPress={() => decreaseScore(2)} />
+            <CustomButton fontSize={Device.deviceType === 2 ? 100 : 50} text="-" isNormal={false} onPress={() => decreaseScore(2)} />
           </View>
         </View>
       </View>
@@ -162,25 +164,25 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 20,
-    marginHorizontal: 10,
   },
   score: {
     display: 'flex',
     alignItems: 'center',
-    width: 390,
+    paddingHorizontal: 40,
   },
   scoreText: {
     color: 'white',
-    fontSize: 370,
+    fontSize: Device.deviceType === 2 ? 320 : 200,
     fontFamily: 'Sign',
   },
   buttonContainer: {
     gap: 20,
     marginTop: 10,
   },
-  resetButton: {
+  middleButtons: {
     marginTop: 20,
     alignSelf: 'center',
+    gap: 20,
   },
 });
 

@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "score-keeper",
+    "name": "Sports Score Tracker",
     "slug": "score-keeper",
     "version": "1.0.0",
     "orientation": "landscape",
@@ -9,21 +9,19 @@
     },
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+    "newArchEnabled": true,
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "tech.scotth.scorekeeper"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/adaptive.png",
         "backgroundColor": "#ffffff"
       },
       "package": "tech.scotth.scorekeeper"
@@ -35,6 +33,16 @@
       "eas": {
         "projectId": "088bbd7c-39e1-46aa-8347-32caec781d32"
       }
-    }
+    },
+    "plugins": [
+        "./plugin/build/index.js",
+      [
+        "expo-font",
+        {
+          "fonts": ["./assets/fonts/Inter-Black.otf", "./assets/fonts/sign.ttf"]
+        }
+      ]
+    ]
+    
   }
 }
