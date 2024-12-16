@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Alert } from 'react-native';
 import CustomButton from './CustomButton';
 import { Audio } from 'expo-av';
@@ -7,23 +7,23 @@ import { getDatabase, ref, onValue, update } from "firebase/database";
 import * as Device from 'expo-device';
 // TODO: Replace the following with your app's Firebase project configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyBouW3qRDbDGIGreQj1Gk0-kBWZtLqzCc0",
-  authDomain: "corona-sdk-4-82825584.firebaseapp.com",
-  databaseURL: "https://corona-sdk-4-82825584.firebaseio.com",
-  projectId: "corona-sdk-4-82825584",
-  storageBucket: "corona-sdk-4-82825584.appspot.com",
-  messagingSenderId: "652763858765",
-  appId: "1:652763858765:web:68320c1e0dec341d095904",
-  measurementId: "G-CHT4LV5J43"
+  apiKey: "AIzaSyByrVDVRX8uDAFikvlkMG3uu7Jlyr6F7kw",
+  authDomain: "sports-score-keeper.firebaseapp.com",
+  projectId: "sports-score-keeper",
+  storageBucket: "sports-score-keeper.firebasestorage.app",
+  messagingSenderId: "342571857973",
+  appId: "1:342571857973:web:4b39266be5d94274f2597c",
+  measurementId: "G-WEL1DEMS23"
 };
 
 const app = initializeApp(firebaseConfig);
 
-const database = getDatabase(app);
+//const database = getDatabase(app);
 
 const Scoreboard = () => {
   const [sound, setSound] = useState();
   const [soundOn, setSoundOn] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
     return sound
@@ -34,63 +34,77 @@ const Scoreboard = () => {
   }, [sound]);
 
 
-  const playSound = async () => {
-    if(soundOn) return;
-    const { sound } = await Audio.Sound.createAsync(
-      require('./assets/beep.wav')
-    );
-    setSound(sound);
-    await sound.playAsync(); // Play the loaded audio
-  };
+  
+
+  const playSound = useCallback(async () => {
+    if (!soundOn || isPlaying) return;
+    setIsPlaying(true);
+    try {
+        const { sound } = await Audio.Sound.createAsync(
+            require('./assets/beep.wav')
+        );
+        setSound(sound);
+        await sound.playAsync();
+    } catch (error) {
+        console.error("Error playing sound:", error);
+    } finally {
+        setIsPlaying(false);
+    }
+  }, [soundOn, isPlaying]);
   const [player1Score, setPlayer1Score] = useState(0);
   const [player2Score, setPlayer2Score] = useState(0);
-  const matchScore = ref(database, 'matchScore');
-  useEffect(() => {
-    onValue(matchScore, (snapshot) => {
-      const data = snapshot.val();
-      setPlayer1Score((oldScore)=>{
-        if(oldScore !== data?.player1){
-          playSound();
-        }
-        return data?.player1 ?? 0});
-      setPlayer2Score((oldScore)=>{
-        if(oldScore !== data?.player2){
-          playSound();
-        }
-        return data?.player2 ?? 0});
-    });
-  }, []);
+  // const matchScore = ref(database, 'matchScore');
+//   useEffect(() => {
+//     const unsubscribe = onValue(matchScore, (snapshot) => {
+//       const data = snapshot.val();
+//       setPlayer1Score((oldScore) => {
+//           if (oldScore !== data?.player1) {
+//               playSound();
+//           }
+//           return data?.player1 ?? 0;
+//       });
+//       setPlayer2Score((oldScore) => {
+//           if (oldScore !== data?.player2) {
+//               playSound();
+//           }
+//           return data?.player2 ?? 0;
+//       });
+//     });
+//     return () => unsubscribe();
+// }, [matchScore]);
 
   const increaseScore = (player) => {
     playSound();
     if (player === 1) {
-      setPlayer1Score(player1Score + 1);
-      update(ref(database, 'matchScore'), {
-        player1: player1Score+1,
-      });
+        setPlayer1Score((prevScore) => {
+            const newScore = prevScore + 1;
+            //update(ref(database, 'matchScore'), { player1: newScore });
+            return newScore;
+        });
     } else {
-      setPlayer2Score(player2Score + 1);
-      update(ref(database, 'matchScore'), {
-        player2: player2Score+1,
-      });
+        setPlayer2Score((prevScore) => {
+            const newScore = prevScore + 1;
+            //update(ref(database, 'matchScore'), { player2: newScore });
+            return newScore;
+        });
     }
-
   };
 
   const decreaseScore = (player) => {
-    playSound();
-    if (player === 1 && player1Score > 0) {
-      setPlayer1Score(player1Score - 1);
-      update(ref(database, 'matchScore'), {
-        player1: player1Score - 1,
-      });
-    } else if (player === 2 && player2Score > 0) {
-      setPlayer2Score(player2Score - 1);
-      update(ref(database, 'matchScore'), {
-        player2: player2Score - 1,
-      });
-    }
-
+      playSound();
+      if (player === 1) {
+          setPlayer1Score((prevScore) => {
+              const newScore = Math.max(prevScore - 1, 0);
+             // update(ref(database, 'matchScore'), { player1: newScore });
+              return newScore;
+          });
+      } else {
+          setPlayer2Score((prevScore) => {
+              const newScore = Math.max(prevScore - 1, 0);
+              //update(ref(database, 'matchScore'), { player2: newScore });
+              return newScore;
+          });
+      }
   };
 
   const resetScores = () => {
@@ -101,10 +115,10 @@ const Scoreboard = () => {
         { text: 'Yes', onPress: () => {
           setPlayer1Score(0);
           setPlayer2Score(0);
-          update(ref(database, 'matchScore'), {
-            player1: 0,
-            player2: 0,
-          });
+            // update(ref(database, 'matchScore'), {
+            //   player1: 0,
+            //   player2: 0,
+            // });
         } },
         {
           text: 'No',
