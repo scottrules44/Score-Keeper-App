@@ -1,27 +1,44 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
-import * as Device from 'expo-device';
-const CustomButton = ({ text, bgColor='', fontSize = 80, onPress, isNormal =true }) => {
-  const buttonStyle = {
-    backgroundColor: bgColor,
-  };
 
+const CustomButton = ({
+  text,
+  onPress,
+  fontSize = 20,
+  color = 'white',
+  bgColor = 'transparent',
+  disabled = false,
+  style,
+  textStyle,
+}) => {
   return (
-    <TouchableOpacity style={[styles.button, buttonStyle, (!isNormal&&{ width: Device.deviceType === 2 ? 300 : 200})]} onPress={onPress}>
-      <Text style={[styles.buttonText, {fontSize}, (!isNormal?{ margin: -10} : { padding: 10})]}>{text}</Text>
+    <TouchableOpacity
+      style={[
+        styles.button,
+        { borderColor: color, backgroundColor: bgColor, opacity: disabled ? 0.35 : 1 },
+        style,
+      ]}
+      onPress={onPress}
+      disabled={disabled}
+      activeOpacity={0.6}
+    >
+      <Text style={[styles.buttonText, { fontSize, color }, textStyle]}>{text}</Text>
     </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   button: {
-    borderRadius: 5,
+    borderRadius: 8,
     alignItems: 'center',
+    justifyContent: 'center',
     borderWidth: 2,
-    borderColor: 'white',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
   },
   buttonText: {
     color: 'white',
+    fontWeight: '600',
   },
 });
 

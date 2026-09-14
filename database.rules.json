@@ -1,0 +1,68 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "rooms": {
+      "$code": {
+        ".read": "$code.matches(/^[0-9]{4}$/)",
+        ".write": "$code.matches(/^[0-9]{4}$/) && (data.exists() || newData.hasChildren(['home', 'away', 'period', 'timer']))",
+        "sport": {
+          ".validate": "newData.isString() && newData.val().length <= 20"
+        },
+        "home": {
+          "name": { ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 20" },
+          "score": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 9999" },
+          "sets": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 99" },
+          "color": { ".validate": "newData.isString() && newData.val().matches(/^#[0-9A-Fa-f]{6}$/)" },
+          "$other": { ".validate": false }
+        },
+        "away": {
+          "name": { ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 20" },
+          "score": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 9999" },
+          "sets": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 99" },
+          "color": { ".validate": "newData.isString() && newData.val().matches(/^#[0-9A-Fa-f]{6}$/)" },
+          "$other": { ".validate": false }
+        },
+        "period": {
+          ".validate": "newData.isNumber() && newData.val() >= 1 && newData.val() <= 99"
+        },
+        "timer": {
+          "running": { ".validate": "newData.isBoolean()" },
+          "startAt": { ".validate": "newData.isNumber()" },
+          "remainMs": { ".validate": "newData.isNumber() && newData.val() >= 0" },
+          "durationMs": { ".validate": "newData.isNumber() && newData.val() >= 0" },
+          "countUp": { ".validate": "newData.isBoolean()" },
+          "$other": { ".validate": false }
+        },
+        "horn": { ".validate": "newData.isNumber()" },
+        "hostOnline": { ".validate": "newData.isBoolean()" },
+        "clients": {
+          "$cid": { ".validate": "newData.isNumber() && $cid.length <= 40" }
+        },
+        "createdAt": { ".validate": "newData.isNumber()" },
+        "updatedAt": { ".validate": "newData.isNumber()" },
+        "$other": { ".validate": false }
+      }
+    },
+    "analytics": {
+      "totals": {
+        "$platform": {
+          "$event": {
+            ".write": "$platform.length <= 20 && $event.length <= 40",
+            ".validate": "newData.isNumber()"
+          }
+        }
+      },
+      "daily": {
+        "$day": {
+          "$platform": {
+            "$event": {
+              ".write": "$day.matches(/^[0-9]{8}$/) && $platform.length <= 20 && $event.length <= 40",
+              ".validate": "newData.isNumber()"
+            }
+          }
+        }
+      }
+    }
+  }
+}

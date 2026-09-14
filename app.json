@@ -2,8 +2,8 @@
   "expo": {
     "name": "Sports Score Tracker",
     "slug": "score-keeper",
-    "version": "1.0.0",
-    "orientation": "landscape",
+    "version": "2.0.0",
+    "orientation": "default",
     "androidNavigationBar": {
       "visible": "immersive"
     },
@@ -17,7 +17,10 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "tech.scotth.scorekeeper"
+      "bundleIdentifier": "tech.scotth.scorekeeper",
+      "entitlements": {
+        "com.apple.developer.ubiquity-kvstore-identifier": "$(TeamIdentifierPrefix)$(CFBundleIdentifier)"
+      }
     },
     "android": {
       "adaptiveIcon": {
