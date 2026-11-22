@@ -12,7 +12,7 @@ expensive/valuable new thing: **hosting live remote sessions**.
   actually connects to your board — hosting with nobody connected costs
   nothing, reopening the board costs nothing, and a day already in use never
   cuts off mid-game. Resets on the 1st.
-- **Pro (one-time purchase, suggest $4.99)**: unlimited remote days. That's it —
+- **Pro (one-time purchase, $3.99, shipped in 2.1)**: unlimited remote days. That's it —
   honest and easy to explain. Casual users (a game night or two a month) never
   hit the limit; coaches and leagues using remotes weekly are exactly the
   people happy to pay once.
@@ -37,24 +37,28 @@ expensive/valuable new thing: **hosting live remote sessions**.
   Firebase Auth (Sign in with Apple/Google) + the meter enforced server-side
   per account. Don't build that until the data says so.
 
-## Wiring up the actual purchase (the one remaining step)
+## How the purchase works (2.1)
 
-The app already has: the meter, the gate, the paywall copy in the session
-modal, and `src/pro.js` with a single `isPro` source to swap. To go live:
-
-1. App Store Connect / Play Console: create non-consumable `pro_unlock`
-   (needs your paid developer agreements in place).
-2. `npx expo install react-native-purchases` (RevenueCat — free below
-   $2.5k/mo), add the API key, create an entitlement named `pro` attached to
-   `pro_unlock`.
-3. In `src/pro.js`, implement `getIsPro()` via
-   `Purchases.getCustomerInfo()` (comment in the file shows the exact call),
-   and add a "Get Pro" + "Restore purchases" button pair where the session
-   modal shows the 🔒 state.
-4. Optional tip jar on the menu screen — same RevenueCat setup, zero gating.
+- Product: non-consumable `tech.scotth.scorekeeper.pro`, $3.99 (USA base
+  price, all territories, Family Sharing on), created in App Store Connect.
+- `modules/pro-store`: local Expo module on StoreKit 2 — buy, restore, and
+  entitlement check via `Transaction.currentEntitlements`. No RevenueCat, no
+  server. Also listens to `Transaction.updates` (Ask to Buy, refunds).
+- `src/pro.js`: single source of `isPro` (StoreKit, cached in iCloud KV).
+- UI: "Get Pro — $3.99" + "Restore" in the Remote sheet (small under the
+  meter, full paywall when free days run out). Android/web hide it.
+- Android (Play Billing) is not wired up yet.
 
 ## Analytics to watch (already live)
 
+Google Analytics for Firebase (iOS native SDK via `modules/firebase-analytics`,
+web via Firebase JS) — Firebase console -> Analytics. Pro funnel events:
+`pro_offer_shown_{upsell,paywall}`, `pro_buy_tap_*`, `pro_purchased`,
+`pro_cancelled`, `pro_pending`, `pro_buy_failed`, `pro_restore_tap`,
+`pro_restored`, `pro_restore_none`, `meter_blocked`; user property `is_pro`;
+screen views `menu` / `board` / `remote`.
+
+The older Realtime Database counters still run too —
 `/analytics` in the Firebase console counts per platform per day:
 `board_opened`, `session_started`, `remote_joined`, `horn`, `sport_*`,
 `viewer_opened`, `web_open`. The number that justifies shipping the purchase:

@@ -33,6 +33,15 @@ target 'SportsScoreTracker' do
 
   config = use_native_modules!(config_command)
 
+  # Firebase Analytics (modules/firebase-analytics) is Swift linked statically:
+  # its ObjC dependencies need module maps.
+  pod 'GoogleUtilities', :modular_headers => true
+  pod 'FirebaseCore', :modular_headers => true
+  pod 'FirebaseCoreInternal', :modular_headers => true
+  pod 'FirebaseInstallations', :modular_headers => true
+  pod 'PromisesObjC', :modular_headers => true
+  pod 'nanopb', :modular_headers => true
+
   use_frameworks! :linkage => podfile_properties['ios.useFrameworks'].to_sym if podfile_properties['ios.useFrameworks']
   use_frameworks! :linkage => ENV['USE_FRAMEWORKS'].to_sym if ENV['USE_FRAMEWORKS']
 
@@ -61,6 +70,24 @@ target 'SportsScoreTracker' do
           config.build_settings['CODE_SIGNING_ALLOWED'] = 'NO'
         end
       end
+    end
+
+    # Newer Xcode rejects pod targets below iOS 15.0; lift any older ones.
+    min_ios = podfile_properties['ios.deploymentTarget'] || '15.1'
+    installer.generated_projects.each do |project|
+      project.targets.each do |t|
+        t.build_configurations.each do |c|
+          dt = c.build_settings['IPHONEOS_DEPLOYMENT_TARGET']
+          if dt && Gem::Version.new(dt) < Gem::Version.new(min_ios)
+            c.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = min_ios
+          end
+          # fmt 9.x fails to compile with newer clang's consteval rules under C++20.
+          if t.name == 'fmt'
+            c.build_settings['CLANG_CXX_LANGUAGE_STANDARD'] = 'c++17'
+          end
+        end
+      end
+      project.save
     end
   end
 end

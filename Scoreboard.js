@@ -168,6 +168,7 @@ const Scoreboard = ({ onBack }) => {
       const m = await getMeter();
       setMeter(m);
       if (!m.canUseToday) {
+        logEvent('meter_blocked');
         setMeterBlocked(true);
         return;
       }
@@ -235,7 +236,7 @@ const Scoreboard = ({ onBack }) => {
   // bigger controls, not just a bigger score.
   const scale = Math.max(0.75, Math.min(width / 900, height / 460, 2.2));
   // Web fallback (native uses auto-fit text instead).
-  const scoreFont = Math.max(120, Math.min(height * 0.5, width * 0.24));
+  const scoreFont = Math.max(130, Math.min(height * 0.56, width * 0.27));
   const clockDone = !game.timer.countUp && clockMs <= 0;
 
   return (
@@ -397,6 +398,10 @@ const Scoreboard = ({ onBack }) => {
         canHostHere={CAN_HOST_HERE}
         freeDays={FREE_REMOTE_DAYS_PER_MONTH}
         onStart={startSession}
+        onProUnlocked={() => {
+          refreshMeter();
+          if (meterBlocked) startSession();
+        }}
         onStop={() => confirmDialog('Stop session', 'Remotes will be disconnected.', stopSession)}
         onClose={() => setModal(null)}
       />

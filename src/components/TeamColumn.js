@@ -1,11 +1,31 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Animated, Platform } from 'react-native';
 import CustomButton from '../../CustomButton';
 
 // One side of the scoreboard: name, a big +1 button, then the giant score —
 // which is ALSO a +1 tap target — with corrections/multi-point buttons below.
-// On native the score auto-fits the free space, so every screen size gets the
-// biggest possible digits.
+// On native the score is sized from the measured free space, so every screen
+// size gets the biggest possible digits. (adjustsFontSizeToFit can't be used
+// for this: on the new architecture it never grows text past 96pt, which left
+// the score tiny on iPad.)
+
+// Advance widths of the 'Sign' font in em (measured from assets/fonts/sign.ttf).
+const DIGIT_EM = 0.49;
+const ONE_EM = 0.26;
+// Digits only use ~0.6em of the font's 1.06em line box, so the score gets a
+// tighter line height and is sized against that instead.
+const LINE_EM = 0.86;
+
+function fitScoreFont(text, box, hintHeight) {
+  if (!box) return null;
+  const chars = String(text);
+  let widthEm = 0;
+  for (const c of chars) widthEm += c === '1' ? ONE_EM : DIGIT_EM;
+  widthEm = Math.max(widthEm, DIGIT_EM);
+  const byWidth = (box.width - 8) / widthEm;
+  const byHeight = (box.height - hintHeight) / LINE_EM;
+  return Math.max(24, Math.floor(Math.min(byWidth, byHeight) * 0.99));
+}
 export default function TeamColumn({
   info,
   increments,
@@ -31,7 +51,12 @@ export default function TeamColumn({
 
   const color = info.color || 'white';
   const extraIncs = increments.filter((i) => i !== 1);
-  const autoFit = Platform.OS !== 'web';
+  const native = Platform.OS !== 'web';
+  const [box, setBox] = useState(null);
+  const hintSize = 11 * scale;
+  const fitted = native ? fitScoreFont(info.score, box, hintSize * 1.6) : null;
+  // Until the first layout pass reports the box, fall back to auto-fit.
+  const autoFit = native && fitted == null;
 
   return (
     <View style={styles.col}>
@@ -54,6 +79,18 @@ export default function TeamColumn({
         style={styles.scoreTap}
         activeOpacity={0.65}
         onPress={() => onBump(1)}
+        onLayout={
+          native
+            ? (e) => {
+                const { width, height } = e.nativeEvent.layout;
+                setBox((b) =>
+                  b && Math.abs(b.width - width) < 1 && Math.abs(b.height - height) < 1
+                    ? b
+                    : { width, height }
+                );
+              }
+            : undefined
+        }
       >
         <Animated.Text
           numberOfLines={1}
@@ -61,12 +98,17 @@ export default function TeamColumn({
           minimumFontScale={0.2}
           style={[
             styles.score,
-            { color, fontSize: autoFit ? 640 * scale : scoreFont, transform: [{ scale: pulse }] },
+            {
+              color,
+              fontSize: fitted ?? (autoFit ? 640 * scale : scoreFont),
+              ...(fitted ? { lineHeight: Math.round(fitted * LINE_EM) } : {}),
+              transform: [{ scale: pulse }],
+            },
           ]}
         >
           {info.score}
         </Animated.Text>
-        <Text style={[styles.hint, { fontSize: 11 * scale }]}>tap +1</Text>
+        <Text style={[styles.hint, { fontSize: hintSize }]}>tap +1</Text>
       </TouchableOpacity>
 
       <View style={[styles.bottomRow, { gap: 10 * scale }]}>
@@ -111,7 +153,7 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     flexShrink: 1,
     flexGrow: 1,
-    paddingHorizontal: 12,
+    paddingHorizontal: 4,
   },
   score: {
     fontFamily: 'Sign',

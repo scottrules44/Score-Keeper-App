@@ -10,12 +10,15 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import Scoreboard from './Scoreboard';
 import MenuScreen from './screens/MenuScreen';
 import RemoteScreen from './screens/RemoteScreen';
-import { logEvent } from './src/analytics';
+import { logEvent, logScreen } from './src/analytics';
 
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
   const [mode, setMode] = useState('menu'); // menu | board | remote
+  useEffect(() => {
+    logScreen(mode);
+  }, [mode]);
   const [fontsLoaded, fontError] = useFonts({
     Sign: require('./assets/fonts/sign.ttf'),
   });

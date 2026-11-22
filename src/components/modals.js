@@ -9,22 +9,115 @@ import {
   ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
+  ScrollView,
+  useWindowDimensions,
 } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 import CustomButton from '../../CustomButton';
 import { SPORTS, SPORT_KEYS, TEAM_COLORS } from '../sports';
 import { WEB_REMOTE_URL } from '../config';
+import { buyPro, restorePro, canPurchasePro, useProPrice } from '../pro';
+import { logEvent } from '../analytics';
+
+// "Get Pro" + "Restore" pair. `compact` is the small upsell under the free-plan
+// meter; the full version is the paywall shown when free days run out.
+function ProOffer({ compact = false, onUnlocked }) {
+  const price = useProPrice();
+  const [busy, setBusy] = useState(null); // 'buy' | 'restore'
+  const [msg, setMsg] = useState(null);
+
+  const where = compact ? 'upsell' : 'paywall';
+  useEffect(() => {
+    if (canPurchasePro) logEvent(`pro_offer_shown_${where}`);
+  }, []);
+
+  if (!canPurchasePro) return null;
+
+  const run = async (kind) => {
+    setBusy(kind);
+    setMsg(null);
+    logEvent(kind === 'buy' ? `pro_buy_tap_${where}` : 'pro_restore_tap');
+    try {
+      if (kind === 'buy') {
+        const r = await buyPro();
+        logEvent(`pro_${r}`); // pro_purchased | pro_cancelled | pro_pending
+        if (r === 'purchased') onUnlocked?.();
+        else if (r === 'pending') setMsg('Purchase pending approval — Pro unlocks once it goes through.');
+      } else {
+        const found = await restorePro();
+        logEvent(found ? 'pro_restored' : 'pro_restore_none');
+        if (found) onUnlocked?.();
+        else setMsg('No previous Pro purchase found for this Apple ID.');
+      }
+    } catch (e) {
+      logEvent(kind === 'buy' ? 'pro_buy_failed' : 'pro_restore_failed');
+      setMsg(e?.message || 'Something went wrong. Please try again.');
+    } finally {
+      setBusy(null);
+    }
+  };
+
+  return (
+    <View style={{ alignItems: 'center', gap: compact ? 8 : 10 }}>
+      {busy ? (
+        <ActivityIndicator color="#FFD60A" />
+      ) : (
+        <View style={styles.row}>
+          <CustomButton
+            text={`⭐ Get Pro — ${price}`}
+            color="#FFD60A"
+            fontSize={compact ? 16 : 20}
+            onPress={() => run('buy')}
+          />
+          <TouchableOpacity onPress={() => run('restore')}>
+            <Text style={styles.restore}>Restore</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+      {!!msg && <Text style={styles.hintSmall}>{msg}</Text>}
+    </View>
+  );
+}
+
+// iOS Modals default to portrait-only. The iPhone app only allows landscape,
+// so without this UIKit throws "no common orientation" and the app aborts.
+const ALL_ORIENTATIONS = [
+  'portrait',
+  'portrait-upside-down',
+  'landscape',
+  'landscape-left',
+  'landscape-right',
+];
 
 function Sheet({ visible, onClose, children, wide = false }) {
+  // Keep the sheet on screen on short (landscape phone) displays; content
+  // scrolls instead of running off the top and bottom.
+  const { height } = useWindowDimensions();
   return (
-    <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
-      <TouchableOpacity style={styles.backdrop} activeOpacity={1} onPress={onClose}>
+    <Modal
+      visible={visible}
+      transparent
+      animationType="fade"
+      onRequestClose={onClose}
+      supportedOrientations={ALL_ORIENTATIONS}
+    >
+      <View style={styles.backdrop}>
+        {/* Tap-outside-to-close sits BEHIND the sheet (not wrapping it), so
+            touches inside reach the ScrollView and it can scroll. */}
+        <TouchableOpacity style={StyleSheet.absoluteFill} activeOpacity={1} onPress={onClose} />
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-          <TouchableOpacity activeOpacity={1} style={[styles.sheet, wide && styles.sheetWide]}>
-            {children}
-          </TouchableOpacity>
+          <View style={[styles.sheet, wide && styles.sheetWide, { maxHeight: height - 24 }]}>
+            <ScrollView
+              style={styles.sheetScroll}
+              contentContainerStyle={styles.sheetContent}
+              bounces={false}
+              keyboardShouldPersistTaps="handled"
+            >
+              {children}
+            </ScrollView>
+          </View>
         </KeyboardAvoidingView>
-      </TouchableOpacity>
+      </View>
     </Modal>
   );
 }
@@ -166,6 +259,7 @@ export function SessionModal({
   onStart,
   onStop,
   onClose,
+  onProUnlocked,
 }) {
   const online = status === 'online' && code;
 
@@ -181,9 +275,11 @@ export function SessionModal({
       {online ? (
         <View style={{ alignItems: 'center', gap: 14 }}>
           <Text style={styles.hint}>Enter this code on any remote — or scan to open the web remote:</Text>
-          <Text style={styles.code}>{code}</Text>
-          <View style={styles.qrBox}>
-            <QRCode value={`${WEB_REMOTE_URL}?code=${code}`} size={130} backgroundColor="white" />
+          <View style={[styles.row, { gap: 24 }]}>
+            <Text style={styles.code}>{code}</Text>
+            <View style={styles.qrBox}>
+              <QRCode value={`${WEB_REMOTE_URL}?code=${code}`} size={110} backgroundColor="white" />
+            </View>
           </View>
           <Text style={styles.hintSmall}>
             📱 Sports Score Tracker app → Remote{'\n'}⌚ Apple Watch app{'\n'}🌐{' '}
@@ -195,6 +291,7 @@ export function SessionModal({
               : 'No remotes connected yet'}
           </Text>
           {!!meterLine && <Text style={styles.meterLine}>{meterLine}</Text>}
+          {!isPro && <ProOffer compact onUnlocked={onProUnlocked} />}
           {!connected && <Text style={styles.warn}>Reconnecting…</Text>}
           <CustomButton text="Stop remote session" color="#FF3131" onPress={onStop} />
         </View>
@@ -215,8 +312,9 @@ export function SessionModal({
           </Text>
           <Text style={styles.proPitch}>
             ⭐ Pro removes the limit: unlimited remote days for your watch, phones, and web
-            remotes. One-time purchase — coming soon in this app.
+            remotes. One-time purchase — no subscription.
           </Text>
+          <ProOffer onUnlocked={onProUnlocked} />
           {!!meterLine && <Text style={styles.meterLine}>{meterLine}</Text>}
         </View>
       ) : (
@@ -231,6 +329,7 @@ export function SessionModal({
             <CustomButton text="Start remote session" color="#39FF14" fontSize={22} onPress={onStart} />
           )}
           {!!meterLine && <Text style={styles.meterLine}>{meterLine}</Text>}
+          {!isPro && <ProOffer compact onUnlocked={onProUnlocked} />}
           {!!error && <Text style={styles.warn}>{error}</Text>}
         </View>
       )}
@@ -250,10 +349,14 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     borderWidth: 1,
     borderColor: '#333',
-    padding: 22,
-    gap: 14,
     minWidth: 320,
     maxWidth: 460,
+    overflow: 'hidden',
+  },
+  sheetScroll: { flexGrow: 0 },
+  sheetContent: {
+    padding: 22,
+    gap: 14,
     alignItems: 'center',
   },
   sheetWide: { maxWidth: 560 },
@@ -302,6 +405,7 @@ const styles = StyleSheet.create({
   code: { color: '#39FF14', fontSize: 64, fontWeight: 'bold', letterSpacing: 10 },
   clients: { color: '#00FFFF', fontSize: 15, fontWeight: '600' },
   meterLine: { color: '#777', fontSize: 13 },
+  restore: { color: '#aaa', fontSize: 14, textDecorationLine: 'underline', paddingHorizontal: 6 },
   lockEmoji: { fontSize: 44 },
   proPitch: {
     color: '#FFD60A',

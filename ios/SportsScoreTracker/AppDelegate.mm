@@ -13,6 +13,10 @@
   // They will be passed down to the ViewController used by React Native.
   self.initialProps = @{};
 
+  // The window is created per-scene in SceneDelegate (UIScene lifecycle is
+  // required on iOS 27+), so don't let RCTAppDelegate create one here.
+  self.automaticallyLoadReactNativeWindow = NO;
+
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
 

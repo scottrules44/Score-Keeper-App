@@ -1,21 +1,37 @@
 import { useEffect, useState } from 'react';
 import { kvGet, kvSet } from '../modules/cloud-kv';
+import * as Store from '../modules/pro-store';
+import { setUserProperty } from './analytics';
 
-// Pro entitlement.
+// Pro entitlement: a one-time, non-consumable App Store purchase.
 //
-// Today: a flag in iCloud KV (set by the purchase flow once in-app purchases
-// are wired up; `devSetPro` exists for testing). The durable source of truth
-// for a real purchase is the App Store receipt — when you add RevenueCat
-// (react-native-purchases), replace `refresh()` with a CustomerInfo lookup for
-// the "pro" entitlement and keep the KV flag as a fast local cache:
-//
-//   const info = await Purchases.getCustomerInfo();
-//   const isPro = !!info.entitlements.active.pro;
-//
-// "Restore Purchases" then works on any device with zero server code.
+// Source of truth on iOS is StoreKit 2 (Transaction.currentEntitlements via
+// modules/pro-store), so Pro follows the Apple ID across devices and
+// reinstalls and "Restore Purchases" needs no server. The iCloud KV flag is
+// only a fast cache so the board knows instantly at launch.
+export const PRO_PRODUCT_ID = 'tech.scotth.scorekeeper.pro';
+export const PRO_FALLBACK_PRICE = '$3.99';
+export const canPurchasePro = Store.available;
+
 const KEY = 'sk:pro';
 
-export async function getIsPro() {
+let current = { loaded: false, isPro: false };
+const listeners = new Set();
+
+function publish(isPro) {
+  current = { loaded: true, isPro };
+  setUserProperty('is_pro', isPro ? 'true' : 'false');
+  listeners.forEach((fn) => fn(current));
+}
+
+async function setCached(isPro) {
+  publish(isPro);
+  try {
+    await kvSet(KEY, isPro ? '1' : '0');
+  } catch {}
+}
+
+async function readCache() {
   try {
     return (await kvGet(KEY)) === '1';
   } catch {
@@ -23,20 +39,77 @@ export async function getIsPro() {
   }
 }
 
-export async function devSetPro(on) {
-  await kvSet(KEY, on ? '1' : '0');
+// Ask StoreKit (when available) and update the cache. Never throws.
+export async function refreshPro() {
+  if (Store.available) {
+    try {
+      const pro = await Store.isEntitled(PRO_PRODUCT_ID);
+      await setCached(pro);
+      return pro;
+    } catch {}
+  }
+  const cached = await readCache();
+  publish(cached);
+  return cached;
 }
 
+export async function getIsPro() {
+  if (current.loaded) return current.isPro;
+  return refreshPro();
+}
+
+// Resolves 'purchased' | 'cancelled' | 'pending'; throws with a readable message.
+export async function buyPro() {
+  const result = await Store.purchase(PRO_PRODUCT_ID);
+  if (result === 'purchased') await setCached(true);
+  return result;
+}
+
+// Resolves true when a previous purchase was found.
+export async function restorePro() {
+  const pro = await Store.restore(PRO_PRODUCT_ID);
+  await setCached(pro);
+  return pro;
+}
+
+export async function getProPrice() {
+  try {
+    const p = await Store.getProduct(PRO_PRODUCT_ID);
+    return p?.displayPrice || PRO_FALLBACK_PRICE;
+  } catch {
+    return PRO_FALLBACK_PRICE;
+  }
+}
+
+export async function devSetPro(on) {
+  await setCached(!!on);
+}
+
+// Purchases finished elsewhere (Ask to Buy, another device, refunds).
+Store.addProListener(({ productId }) => {
+  if (productId === PRO_PRODUCT_ID) refreshPro();
+});
+
 export function useEntitlements() {
-  const [state, setState] = useState({ loaded: false, isPro: false });
+  const [state, setState] = useState(current);
+  useEffect(() => {
+    listeners.add(setState);
+    if (!current.loaded) refreshPro();
+    else setState(current);
+    return () => listeners.delete(setState);
+  }, []);
+  return state;
+}
+
+// Price string for the paywall; falls back to the list price until StoreKit answers.
+export function useProPrice() {
+  const [price, setPrice] = useState(PRO_FALLBACK_PRICE);
   useEffect(() => {
     let alive = true;
-    getIsPro().then((isPro) => {
-      if (alive) setState({ loaded: true, isPro });
-    });
+    if (canPurchasePro) getProPrice().then((p) => alive && setPrice(p));
     return () => {
       alive = false;
     };
   }, []);
-  return state;
+  return price;
 }
