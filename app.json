@@ -21,6 +21,9 @@
       "buildNumber": "6",
       "entitlements": {
         "com.apple.developer.ubiquity-kvstore-identifier": "$(TeamIdentifierPrefix)$(CFBundleIdentifier)"
+      },
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
@@ -39,14 +42,16 @@
       }
     },
     "plugins": [
-        "./plugin/build/index.js",
+      "./plugin/build/index.js",
       [
         "expo-font",
         {
-          "fonts": ["./assets/fonts/Inter-Black.otf", "./assets/fonts/sign.ttf"]
+          "fonts": [
+            "./assets/fonts/Inter-Black.otf",
+            "./assets/fonts/sign.ttf"
+          ]
         }
       ]
     ]
-    
   }
 }
